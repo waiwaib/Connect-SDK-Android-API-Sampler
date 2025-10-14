@@ -46,7 +46,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.ConnectSDK:Connect-SDK-Android:2.0.0'
+    implementation('com.github.ConnectSDK:Connect-SDK-Android:2.0.0') {
+        exclude group: 'com.connectsdk.service', module: 'AirPlayService'
+    }
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
