@@ -62,7 +62,22 @@ public class SSDPClient {
     static int MX = 5;
 
     public SSDPClient(InetAddress source) throws IOException {
-        this(source, new MulticastSocket(PORT), new DatagramSocket(null));
+        this(source, createMulticastSocket(), new DatagramSocket(null));
+    }
+
+    private static MulticastSocket createMulticastSocket() throws IOException {
+        MulticastSocket socket = new MulticastSocket(PORT);
+        socket.setReuseAddress(true);
+        socket.setTimeToLive(2);
+        try {
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+            if (networkInterface != null) {
+                socket.setNetworkInterface(networkInterface);
+            }
+        } catch (Exception e) {
+            Log.w(Util.T, "Failed to set network interface: " + e.getMessage());
+        }
+        return socket;
     }
 
     public SSDPClient(InetAddress source, MulticastSocket mcSocket, DatagramSocket dgSocket) throws IOException {
@@ -107,7 +122,7 @@ public class SSDPClient {
     }
 
     public boolean isConnected() {
-        return datagramSocket != null && multicastSocket != null && datagramSocket.isConnected() && multicastSocket.isConnected();
+        return datagramSocket != null && multicastSocket != null && !datagramSocket.isClosed() && !multicastSocket.isClosed();
     }
 
     /** Close the socket */
