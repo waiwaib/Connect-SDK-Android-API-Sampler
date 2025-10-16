@@ -36,6 +36,7 @@ import com.connectsdk.device.ConnectableDeviceListener;
 import com.connectsdk.device.DevicePicker;
 import com.connectsdk.discovery.DiscoveryManager;
 import com.connectsdk.discovery.DiscoveryManager.PairingLevel;
+import com.connectsdk.discovery.DiscoveryManagerListener;
 import com.connectsdk.discovery.DiscoveryProvider;
 import com.connectsdk.sampler.fragments.BaseFragment;
 import com.connectsdk.service.DeviceService;
@@ -46,7 +47,7 @@ import com.connectsdk.service.command.ServiceCommandError;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
+public class MainActivity extends AppCompatActivity implements ActionBar.TabListener, DiscoveryManagerListener {
 
     ConnectableDevice mTV;
     AlertDialog dialog;
@@ -160,30 +161,36 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         });
 
         setupPicker();
-
+        DiscoveryManager.getInstance().addListener(this);
         mDiscoveryManager = DiscoveryManager.getInstance();
-        mDiscoveryManager.registerDefaultDeviceTypes();
+        //mDiscoveryManager.registerDefaultDeviceTypes();
         mDiscoveryManager.setPairingLevel(PairingLevel.ON);
 
         // To show all services in a device, a device item in DevicePickerList
         // mDiscoveryManager.setServiceIntegration(true);
 
         // To search devices with specific service types
-        /*
+
         try {
             // AirPlay
-            mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.AirPlayService"),
-                    (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.ZeroconfDiscoveryProvider"));
+//            mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.AirPlayService"),
+//                    (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.ZeroconfDiscoveryProvider"));
             // webOS SSAP (Simple Service Access Protocol)
-            mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.WebOSTVService"),
-                    (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.SSDPDiscoveryProvider"));
+//            mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.WebOSTVService"),
+//                    (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.SSDPDiscoveryProvider"));
             // DLNA
             mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.DLNAService"),
                     (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.SSDPDiscoveryProvider"));
+
+            // Google Cast
+            mDiscoveryManager.registerDeviceService(
+                    (Class<DeviceService>) Class.forName("com.connectsdk.service.CastService"),
+                    (Class<DiscoveryProvider>) Class.forName("com.connectsdk.discovery.provider.CastDiscoveryProvider")
+            );
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        */
+
 
         DiscoveryManager.getInstance().start();
     }
@@ -348,10 +355,10 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_connect:
-                hConnectToggle();
-                return true;
+        int id = item.getItemId();
+        if (id == R.id.action_connect) {
+            hConnectToggle();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -366,5 +373,25 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         BaseFragment frag = mSectionsPagerAdapter.getFragment(tab.getPosition());
         if (frag != null)
             frag.setTv(mTV);
+    }
+
+    @Override
+    public void onDeviceAdded(DiscoveryManager manager, ConnectableDevice device) {
+        Log.d("MainActivity", "onDeviceAdded " + device.getFriendlyName());
+    }
+
+    @Override
+    public void onDeviceUpdated(DiscoveryManager manager, ConnectableDevice device) {
+        Log.d("MainActivity", "onDeviceUpdated " + device.getFriendlyName());
+    }
+
+    @Override
+    public void onDeviceRemoved(DiscoveryManager manager, ConnectableDevice device) {
+        Log.d("MainActivity", "onDeviceRemoved " + device.getFriendlyName());
+    }
+
+    @Override
+    public void onDiscoveryFailed(DiscoveryManager manager, ServiceCommandError error) {
+        Log.d("MainActivity", "onDiscoveryFailed " + error.toString());
     }
 }
