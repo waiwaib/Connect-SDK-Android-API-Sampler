@@ -38,15 +38,15 @@ repositories {
 dependencies {
     implementation(fileTree("src/main/libs") { include("*.jar") })
     // AndroidX base
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
-    implementation("androidx.mediarouter:mediarouter:1.7.0")
+    implementation("androidx.mediarouter:mediarouter:1.8.1")
 
     // Google Cast
     implementation("com.google.android.gms:play-services-cast:22.1.0")
 
     // Misc dependencies
-    implementation("com.googlecode.plist:dd-plist:1.23")
+    implementation("com.googlecode.plist:dd-plist:1.28")
     implementation("net.i2p.crypto:eddsa:0.3.0")
 }
