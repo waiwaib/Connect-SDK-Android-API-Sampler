@@ -180,16 +180,19 @@ public class SystemFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.volumeDownButton:
-                    getVolumeControl().volumeDown(null);
-                    testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.VolumeDown);
-                    break;
-                case R.id.volumeUpButton:
-                    getVolumeControl().volumeUp(null);
-                    testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.VolumeUp);
-                    break;
-            }
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int id = v.getId();
+                    if (id == R.id.volumeDownButton) {
+                        getVolumeControl().volumeDown(null);
+                        testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.VolumeDown);
+                    } else if (id == R.id.volumeUpButton) {
+                        getVolumeControl().volumeUp(null);
+                        testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.VolumeUp);
+                    }
+                }
+            });
         }
     };
 

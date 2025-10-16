@@ -20,7 +20,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         DIALService.registerApp("Levak");
-        DiscoveryManager.init(getApplicationContext());
+        DiscoveryManager.init(this);
 
         super.onCreate();
     }

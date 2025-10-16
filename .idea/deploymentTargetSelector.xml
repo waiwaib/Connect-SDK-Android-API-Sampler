@@ -5,6 +5,9 @@
       <SelectionState runConfigName="Connect-SDK-Android-API-Sampler-master">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="Connect-SDK-Android-API-Sampler">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
