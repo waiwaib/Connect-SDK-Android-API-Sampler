@@ -156,7 +156,7 @@ public class SSDPDiscoveryProvider implements DiscoveryProvider {
     public void stop() {
         synchronized (lock) {
             isRunning = false;
-
+            isScanning = true;
             if (responseThread != null) {
                 responseThread.interrupt();
                 responseThread = null;

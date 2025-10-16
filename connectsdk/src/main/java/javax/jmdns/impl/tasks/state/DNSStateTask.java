@@ -31,7 +31,7 @@ import javax.jmdns.impl.tasks.DNSTask;
 
 /**
  * This is the root class for all state tasks. These tasks work with objects that implements the
- * {@link DNSStatefulObject} interface and therefore participate in the state machine.
+ * {@link javax.jmdns.impl.DNSStatefulObject} interface and therefore participate in the state machine.
  *
  * @author Pierre Frisch
  */

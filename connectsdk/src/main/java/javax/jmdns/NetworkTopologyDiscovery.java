@@ -57,8 +57,6 @@ import javax.jmdns.impl.NetworkTopologyDiscoveryImpl;
  * }
  * </pre>
  *
- * </p>
- *
  * @author Pierre Frisch
  */
 public interface NetworkTopologyDiscovery {
@@ -84,7 +82,7 @@ public interface NetworkTopologyDiscovery {
             NetworkTopologyDiscovery newNetworkTopologyDiscovery();
         }
 
-        private static final AtomicReference<ClassDelegate> _databaseClassDelegate = new AtomicReference<>();
+        private static final AtomicReference<Factory.ClassDelegate> _databaseClassDelegate = new AtomicReference<>();
 
         private Factory() {
             super();
@@ -98,7 +96,7 @@ public interface NetworkTopologyDiscovery {
          * @see #classDelegate()
          * @see JmmDNS.Factory.ClassDelegate
          */
-        public static void setClassDelegate(ClassDelegate delegate) {
+        public static void setClassDelegate(Factory.ClassDelegate delegate) {
             _databaseClassDelegate.set(delegate);
         }
 
@@ -109,7 +107,7 @@ public interface NetworkTopologyDiscovery {
          * @see #setClassDelegate(ClassDelegate anObject)
          * @see JmmDNS.Factory.ClassDelegate
          */
-        public static ClassDelegate classDelegate() {
+        public static Factory.ClassDelegate classDelegate() {
             return _databaseClassDelegate.get();
         }
 
@@ -120,7 +118,7 @@ public interface NetworkTopologyDiscovery {
          */
         private static NetworkTopologyDiscovery newNetworkTopologyDiscovery() {
             NetworkTopologyDiscovery instance = null;
-            ClassDelegate delegate = _databaseClassDelegate.get();
+            Factory.ClassDelegate delegate = _databaseClassDelegate.get();
             if (delegate != null) {
                 instance = delegate.newNetworkTopologyDiscovery();
             }
@@ -134,9 +132,9 @@ public interface NetworkTopologyDiscovery {
          */
         public static NetworkTopologyDiscovery getInstance() {
             if (_instance == null) {
-                synchronized (Factory.class) {
+                synchronized (NetworkTopologyDiscovery.Factory.class) {
                     if (_instance == null) {
-                        _instance = Factory.newNetworkTopologyDiscovery();
+                        _instance = NetworkTopologyDiscovery.Factory.newNetworkTopologyDiscovery();
                     }
                 }
             }

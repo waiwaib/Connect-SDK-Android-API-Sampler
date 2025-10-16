@@ -66,7 +66,7 @@ public interface DNSTaskStarter {
             DNSTaskStarter newDNSTaskStarter(JmDNSImpl jmDNSImpl);
         }
 
-        private static final AtomicReference<ClassDelegate> _databaseClassDelegate = new AtomicReference<>();
+        private static final AtomicReference<Factory.ClassDelegate> _databaseClassDelegate = new AtomicReference<>();
 
         private Factory() {
             super();
@@ -79,9 +79,9 @@ public interface DNSTaskStarter {
          * @param delegate
          *            The object to set as DNSTaskStarter's class delegate.
          * @see #classDelegate()
-         * @see ClassDelegate
+         * @see DNSTaskStarter.Factory.ClassDelegate
          */
-        public static void setClassDelegate(ClassDelegate delegate) {
+        public static void setClassDelegate(Factory.ClassDelegate delegate) {
             _databaseClassDelegate.set(delegate);
         }
 
@@ -90,9 +90,9 @@ public interface DNSTaskStarter {
          *
          * @return DNSTaskStarter's class delegate.
          * @see #setClassDelegate(ClassDelegate anObject)
-         * @see ClassDelegate
+         * @see DNSTaskStarter.Factory.ClassDelegate
          */
-        public static ClassDelegate classDelegate() {
+        public static Factory.ClassDelegate classDelegate() {
             return _databaseClassDelegate.get();
         }
 
@@ -105,7 +105,7 @@ public interface DNSTaskStarter {
          */
         private static DNSTaskStarter newDNSTaskStarter(JmDNSImpl jmDNSImpl) {
             DNSTaskStarter instance = null;
-            ClassDelegate delegate = _databaseClassDelegate.get();
+            Factory.ClassDelegate delegate = _databaseClassDelegate.get();
             if (delegate != null) {
                 instance = delegate.newDNSTaskStarter(jmDNSImpl);
             }
@@ -119,7 +119,7 @@ public interface DNSTaskStarter {
          */
         public static Factory getInstance() {
             if (_instance == null) {
-                synchronized (Factory.class) {
+                synchronized (DNSTaskStarter.Factory.class) {
                     if (_instance == null) {
                         _instance = new Factory();
                     }

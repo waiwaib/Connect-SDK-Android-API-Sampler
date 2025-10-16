@@ -59,7 +59,7 @@ public abstract class ServiceEvent extends EventObject implements Cloneable {
      * Returns the service info record, or null if the service could not be resolved. Always returns null, if the event is sent to a service type listener.
      * 
      * @return service info record
-     * @see ServiceEvent#getInfo()
+     * @see javax.jmdns.ServiceEvent#getInfo()
      */
     public abstract ServiceInfo getInfo();
 

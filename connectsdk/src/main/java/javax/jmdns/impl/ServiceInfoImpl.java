@@ -83,7 +83,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
 
     }
 
-    private final static class ServiceInfoState extends DefaultImplementation {
+    private final static class ServiceInfoState extends DNSStatefulObject.DefaultImplementation {
 
         private static final long     serialVersionUID = 1104131034952196820L;
 
@@ -134,7 +134,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      * @param priority
      * @param persistent
      * @param text
-     * @see ServiceInfo#create(String, String, int, int, int, String)
+     * @see javax.jmdns.ServiceInfo#create(String, String, int, int, int, String)
      */
     public ServiceInfoImpl(String type, String name, String subtype, int port, int weight, int priority, boolean persistent, String text) {
         this(ServiceTypeDecoder.decodeQualifiedNameMap(type, name, subtype), port, weight, priority, persistent, (byte[]) null);
@@ -157,7 +157,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      * @param priority
      * @param persistent
      * @param props
-     * @see ServiceInfo#create(String, String, int, int, int, Map)
+     * @see javax.jmdns.ServiceInfo#create(String, String, int, int, int, Map)
      */
     public ServiceInfoImpl(String type, String name, String subtype, int port, int weight, int priority, boolean persistent, Map<String, ?> props) {
         this(ServiceTypeDecoder.decodeQualifiedNameMap(type, name, subtype), port, weight, priority, persistent, ByteWrangler.textFromProperties(props));
@@ -172,7 +172,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      * @param priority
      * @param persistent
      * @param text
-     * @see ServiceInfo#create(String, String, int, int, int, byte[])
+     * @see javax.jmdns.ServiceInfo#create(String, String, int, int, int, byte[])
      */
     public ServiceInfoImpl(String type, String name, String subtype, int port, int weight, int priority, boolean persistent, byte[] text) {
         this(ServiceTypeDecoder.decodeQualifiedNameMap(type, name, subtype), port, weight, priority, persistent, text);
@@ -385,7 +385,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     }
 
     /**
-     * @see ServiceInfo#getServer()
+     * @see javax.jmdns.ServiceInfo#getServer()
      */
     @Override
     public String getServer() {
@@ -393,7 +393,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     }
 
     /**
-     * @see ServiceInfo#hasServer()
+     * @see javax.jmdns.ServiceInfo#hasServer()
      */
     @Override
     public boolean hasServer() {
@@ -545,7 +545,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     }
 
     /**
-     * @see ServiceInfo#getPort()
+     * @see javax.jmdns.ServiceInfo#getPort()
      */
     @Override
     public int getPort() {
@@ -553,7 +553,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     }
 
     /**
-     * @see ServiceInfo#getPriority()
+     * @see javax.jmdns.ServiceInfo#getPriority()
      */
     @Override
     public int getPriority() {
@@ -561,7 +561,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     }
 
     /**
-     * @see ServiceInfo#getWeight()
+     * @see javax.jmdns.ServiceInfo#getWeight()
      */
     @Override
     public int getWeight() {
@@ -569,7 +569,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     }
 
     /**
-     * @see ServiceInfo#getTextBytes()
+     * @see javax.jmdns.ServiceInfo#getTextBytes()
      */
     @Override
     public byte[] getTextBytes() {
@@ -897,7 +897,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
                 break;
             case TYPE_SRV:
                 if (record.getName().equalsIgnoreCase(this.getQualifiedName())) {
-                    final Service srv = (Service) record;
+                    final DNSRecord.Service srv = (DNSRecord.Service) record;
                     final boolean serverChanged = (_server == null) || !_server.equalsIgnoreCase(srv.getServer());
                     _server = srv.getServer();
                     _port = srv.getPort();
@@ -920,7 +920,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
                 break;
             case TYPE_TXT:
                 if (record.getName().equalsIgnoreCase(this.getQualifiedName())) {
-                    Text txt = (Text) record;
+                    DNSRecord.Text txt = (DNSRecord.Text) record;
                     _text = txt.getText();
                     _props = null; // set it null for apply update text data
                     serviceUpdated = true;

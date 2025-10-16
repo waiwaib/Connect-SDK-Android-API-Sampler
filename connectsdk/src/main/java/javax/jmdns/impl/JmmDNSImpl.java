@@ -166,7 +166,7 @@ public class JmmDNSImpl implements JmmDNS, NetworkTopologyListener, ServiceInfoI
             _typeListeners.clear();
             _serviceTypes.clear();
             _closed.set(true);
-            Factory.close();
+            JmmDNS.Factory.close();
         }
     }
 

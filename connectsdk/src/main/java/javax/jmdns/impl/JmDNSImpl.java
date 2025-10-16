@@ -130,7 +130,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     public static class ServiceTypeEntry extends AbstractMap<String, String>implements Cloneable {
 
-        private final Set<Entry<String, String>> _entrySet;
+        private final Set<Map.Entry<String, String>> _entrySet;
 
         private final String _type;
 
@@ -185,7 +185,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                 if (!(entry instanceof Map.Entry)) {
                     return false;
                 }
-                return this.getKey().equals(((Entry<?, ?>) entry).getKey()) && this.getValue().equals(((Entry<?, ?>) entry).getValue());
+                return this.getKey().equals(((Map.Entry<?, ?>) entry).getKey()) && this.getValue().equals(((Map.Entry<?, ?>) entry).getValue());
             }
 
             /**
@@ -236,7 +236,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
          * @see java.util.AbstractMap#entrySet()
          */
         @Override
-        public Set<Entry<String, String>> entrySet() {
+        public Set<Map.Entry<String, String>> entrySet() {
             return _entrySet;
         }
 
@@ -284,7 +284,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         @Override
         public ServiceTypeEntry clone() {
             ServiceTypeEntry entry = new ServiceTypeEntry(this.getType());
-            for (Entry<String, String> subTypeEntry : this.entrySet()) {
+            for (Map.Entry<String, String> subTypeEntry : this.entrySet()) {
                 entry.add(subTypeEntry.getValue());
             }
             return entry;
@@ -1702,7 +1702,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void purgeTimer() {
-        Factory.getInstance().getStarter(this.getDns()).purgeTimer();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).purgeTimer();
     }
 
     /*
@@ -1711,7 +1711,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void purgeStateTimer() {
-        Factory.getInstance().getStarter(this.getDns()).purgeStateTimer();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).purgeStateTimer();
     }
 
     /*
@@ -1720,7 +1720,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void cancelTimer() {
-        Factory.getInstance().getStarter(this.getDns()).cancelTimer();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).cancelTimer();
     }
 
     /*
@@ -1729,7 +1729,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void cancelStateTimer() {
-        Factory.getInstance().getStarter(this.getDns()).cancelStateTimer();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).cancelStateTimer();
     }
 
     /*
@@ -1738,7 +1738,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startProber() {
-        Factory.getInstance().getStarter(this.getDns()).startProber();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startProber();
     }
 
     /*
@@ -1747,7 +1747,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startAnnouncer() {
-        Factory.getInstance().getStarter(this.getDns()).startAnnouncer();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startAnnouncer();
     }
 
     /*
@@ -1756,7 +1756,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startRenewer() {
-        Factory.getInstance().getStarter(this.getDns()).startRenewer();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startRenewer();
     }
 
     /*
@@ -1765,7 +1765,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startCanceler() {
-        Factory.getInstance().getStarter(this.getDns()).startCanceler();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startCanceler();
     }
 
     /*
@@ -1774,7 +1774,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startReaper() {
-        Factory.getInstance().getStarter(this.getDns()).startReaper();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startReaper();
     }
 
     /*
@@ -1783,7 +1783,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startServiceInfoResolver(ServiceInfoImpl info) {
-        Factory.getInstance().getStarter(this.getDns()).startServiceInfoResolver(info);
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startServiceInfoResolver(info);
     }
 
     /*
@@ -1792,7 +1792,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startTypeResolver() {
-        Factory.getInstance().getStarter(this.getDns()).startTypeResolver();
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startTypeResolver();
     }
 
     /*
@@ -1801,7 +1801,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startServiceResolver(String type) {
-        Factory.getInstance().getStarter(this.getDns()).startServiceResolver(type);
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startServiceResolver(type);
     }
 
     /*
@@ -1810,7 +1810,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
      */
     @Override
     public void startResponder(DNSIncoming in, InetAddress addr, int port) {
-        Factory.getInstance().getStarter(this.getDns()).startResponder(in, addr, port);
+        DNSTaskStarter.Factory.getInstance().getStarter(this.getDns()).startResponder(in, addr, port);
     }
 
     private final Object _recoverLock = new Object();
@@ -1987,7 +1987,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
 
             // earlier we did a DNSTaskStarter.Factory.getInstance().getStarter(this.getDns())
             // now we must release the resources associated with the starter for this JmDNS instance
-            Factory.getInstance().disposeStarter(this.getDns());
+            DNSTaskStarter.Factory.getInstance().disposeStarter(this.getDns());
 
             logger.debug("JmDNS closed.");
         }
@@ -2040,7 +2040,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         }
         sb.append("\n");
         sb.append("\t---- Service Listeners ----");
-        for (final Map.Entry<String, List<ServiceListenerStatus>> entry : _serviceListeners.entrySet()) {
+        for (final Map.Entry<String, List<ListenerStatus.ServiceListenerStatus>> entry : _serviceListeners.entrySet()) {
             sb.append("\n\t\tService Listener: ");
             sb.append(entry.getKey());
             sb.append(": ");

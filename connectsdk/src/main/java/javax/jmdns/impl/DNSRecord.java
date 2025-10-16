@@ -379,7 +379,7 @@ public abstract class DNSRecord extends DNSEntry {
         @Override
         boolean handleQuery(JmDNSImpl dns, long expirationTime) {
             if (dns.getLocalHost().conflictWithRecord(this)) {
-                Address localAddress = dns.getLocalHost().getDNSAddressRecord(this.getRecordType(), this.isUnique(), DNSConstants.DNS_TTL);
+                DNSRecord.Address localAddress = dns.getLocalHost().getDNSAddressRecord(this.getRecordType(), this.isUnique(), DNSConstants.DNS_TTL);
                 if (localAddress != null) {
                     int comparison = this.compareTo(localAddress);
 
@@ -792,7 +792,7 @@ public abstract class DNSRecord extends DNSEntry {
             ServiceInfoImpl info = (ServiceInfoImpl) dns.getServices().get(this.getKey());
             if (info != null && (info.isAnnouncing() || info.isAnnounced()) && (_port != info.getPort() || !_server.equalsIgnoreCase(dns.getLocalHost().getName()))) {
                 logger.debug("handleQuery() Conflicting probe detected from: {}", getRecordSource());
-                Service localService = new Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), dns.getLocalHost().getName());
+                DNSRecord.Service localService = new DNSRecord.Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), dns.getLocalHost().getName());
 
                 // This block is useful for debugging race conditions when jmDNS is responding to itself.
                 try {
@@ -862,7 +862,7 @@ public abstract class DNSRecord extends DNSEntry {
             ServiceInfoImpl info = (ServiceInfoImpl) dns.getServices().get(this.getKey());
             if (info != null) {
                 if (this._port == info.getPort() != _server.equals(dns.getLocalHost().getName())) {
-                    return dns.addAnswer(in, addr, port, out, new Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), dns
+                    return dns.addAnswer(in, addr, port, out, new DNSRecord.Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), dns
                             .getLocalHost().getName()));
                 }
             }

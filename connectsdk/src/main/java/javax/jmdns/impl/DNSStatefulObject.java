@@ -38,7 +38,7 @@ public interface DNSStatefulObject {
     /**
      * This class define a semaphore. On this multiple threads can wait the arrival of one event. Thread wait for a maximum defined by the timeout.
      * <p>
-     * Implementation note: this class is based on {@link Semaphore} so that they can be released by the timeout timer.
+     * Implementation note: this class is based on {@link java.util.concurrent.Semaphore} so that they can be released by the timeout timer.
      * </p>
      *
      * @author Pierre Frisch

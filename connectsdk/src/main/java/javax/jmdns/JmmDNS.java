@@ -70,7 +70,7 @@ public interface JmmDNS extends Closeable {
          * @param delegate
          *            The object to set as JmmDNS's class delegate.
          * @see #classDelegate()
-         * @see ClassDelegate
+         * @see JmmDNS.Factory.ClassDelegate
          */
         public static void setClassDelegate(ClassDelegate delegate) {
             _databaseClassDelegate.set(delegate);
@@ -81,7 +81,7 @@ public interface JmmDNS extends Closeable {
          *
          * @return JmmDNS's class delegate.
          * @see #setClassDelegate(ClassDelegate anObject)
-         * @see ClassDelegate
+         * @see JmmDNS.Factory.ClassDelegate
          */
         public static ClassDelegate classDelegate() {
             return _databaseClassDelegate.get();
@@ -109,7 +109,7 @@ public interface JmmDNS extends Closeable {
         public static JmmDNS getInstance() {
             synchronized (Factory.class) {
                 if (_instance == null) {
-                    _instance = Factory.newJmmDNS();
+                    _instance = JmmDNS.Factory.newJmmDNS();
                 }
                 return _instance;
             }
@@ -135,7 +135,7 @@ public interface JmmDNS extends Closeable {
      * Return the names of the JmDNS instances.
      *
      * @return String[] of name of the JmDNS
-     * @see JmDNS#getName()
+     * @see javax.jmdns.JmDNS#getName()
      */
     String[] getNames();
 
@@ -143,7 +143,7 @@ public interface JmmDNS extends Closeable {
      * Return the list HostName associated with this JmmDNS instance.
      *
      * @return String[] of host names
-     * @see JmDNS#getHostName()
+     * @see javax.jmdns.JmDNS#getHostName()
      */
     String[] getHostNames();
 
@@ -152,7 +152,7 @@ public interface JmmDNS extends Closeable {
      *
      * @return InetAddress[] of Internet Address
      * @exception IOException if any IO error occurs
-     * @see JmDNS#getInetAddress()
+     * @see javax.jmdns.JmDNS#getInetAddress()
      */
     InetAddress[] getInetAddresses() throws IOException;
 
@@ -161,7 +161,7 @@ public interface JmmDNS extends Closeable {
      *
      * @return InetAddress[] of Internet Address
      * @exception IOException if any IO error occurs
-     * @see JmDNS#getInterface()
+     * @see javax.jmdns.JmDNS#getInterface()
      * @deprecated do not use this implementation yields unpredictable results use {@link #getInetAddresses()}
      */
     @Deprecated
@@ -176,7 +176,7 @@ public interface JmmDNS extends Closeable {
 
     /**
      * Get service information. If the information is not cached, the method will block until updated information is received on all DNS.
-     * <p/>
+     * <p>
      * Usage note: Do not call this method from the AWT event dispatcher thread. You will make the user interface unresponsive.
      *
      * @param type
@@ -184,13 +184,13 @@ public interface JmmDNS extends Closeable {
      * @param name
      *            unqualified service name, such as <code>foobar</code> .
      * @return ServiceInfo[] list of service info. If no service info is found the list is empty.
-     * @see JmDNS#getServiceInfo(String, String)
+     * @see javax.jmdns.JmDNS#getServiceInfo(java.lang.String, java.lang.String)
      */
     ServiceInfo[] getServiceInfos(String type, String name);
 
     /**
      * Get service information. If the information is not cached, the method will block until updated information is received on all DNS.
-     * <p/>
+     * <p>
      * Usage note: If you call this method from the AWT event dispatcher thread, use a small timeout, or you will make the user interface unresponsive.
      *
      * @param type
@@ -200,13 +200,13 @@ public interface JmmDNS extends Closeable {
      * @param timeout
      *            timeout in milliseconds. Typical timeout should be 5s.
      * @return ServiceInfo[] list of service info. If no service info is found the list is empty.
-     * @see JmDNS#getServiceInfo(String, String, long)
+     * @see javax.jmdns.JmDNS#getServiceInfo(java.lang.String, java.lang.String, long)
      */
     ServiceInfo[] getServiceInfos(String type, String name, long timeout);
 
     /**
      * Get service information. If the information is not cached, the method will block until updated information is received on all DNS.
-     * <p/>
+     * <p>
      * Usage note: If you call this method from the AWT event dispatcher thread, use a small timeout, or you will make the user interface unresponsive.
      *
      * @param type
@@ -216,13 +216,13 @@ public interface JmmDNS extends Closeable {
      * @param persistent
      *            if <code>true</code> ServiceListener.resolveService will be called whenever new information is received.
      * @return ServiceInfo[] of service info. If no service info is found the list is empty.
-     * @see JmDNS#getServiceInfo(String, String, boolean)
+     * @see javax.jmdns.JmDNS#getServiceInfo(java.lang.String, java.lang.String, boolean)
      */
     ServiceInfo[] getServiceInfos(String type, String name, boolean persistent);
 
     /**
      * Get service information. If the information is not cached, the method will block until updated information is received on all DNS.
-     * <p/>
+     * <p>
      * Usage note: If you call this method from the AWT event dispatcher thread, use a small timeout, or you will make the user interface unresponsive.
      *
      * @param type
@@ -234,7 +234,7 @@ public interface JmmDNS extends Closeable {
      * @param persistent
      *            if <code>true</code> ServiceListener.resolveService will be called whenever new information is received.
      * @return ServiceInfo[] list of service info. If no service info is found the list is empty.
-     * @see JmDNS#getServiceInfo(String, String, boolean, long)
+     * @see javax.jmdns.JmDNS#getServiceInfo(java.lang.String, java.lang.String, boolean, long)
      */
     ServiceInfo[] getServiceInfos(String type, String name, boolean persistent, long timeout);
 
@@ -245,7 +245,7 @@ public interface JmmDNS extends Closeable {
      *            full qualified service type, such as <code>_http._tcp.local.</code> .
      * @param name
      *            unqualified service name, such as <code>foobar</code> .
-     * @see JmDNS#requestServiceInfo(String, String)
+     * @see javax.jmdns.JmDNS#requestServiceInfo(java.lang.String, java.lang.String)
      */
     void requestServiceInfo(String type, String name);
 
@@ -258,7 +258,7 @@ public interface JmmDNS extends Closeable {
      *            unqualified service name, such as <code>foobar</code> .
      * @param persistent
      *            if <code>true</code> ServiceListener.resolveService will be called whenever new information is received.
-     * @see JmDNS#requestServiceInfo(String, String, boolean)
+     * @see javax.jmdns.JmDNS#requestServiceInfo(java.lang.String, java.lang.String, boolean)
      */
     void requestServiceInfo(String type, String name, boolean persistent);
 
@@ -271,7 +271,7 @@ public interface JmmDNS extends Closeable {
      *            unqualified service name, such as <code>foobar</code> .
      * @param timeout
      *            timeout in milliseconds
-     * @see JmDNS#requestServiceInfo(String, String, long)
+     * @see javax.jmdns.JmDNS#requestServiceInfo(java.lang.String, java.lang.String, long)
      */
     void requestServiceInfo(String type, String name, long timeout);
 
@@ -286,7 +286,7 @@ public interface JmmDNS extends Closeable {
      *            if <code>true</code> ServiceListener.resolveService will be called whenever new information is received.
      * @param timeout
      *            timeout in milliseconds
-     * @see JmDNS#requestServiceInfo(String, String, boolean, long)
+     * @see javax.jmdns.JmDNS#requestServiceInfo(java.lang.String, java.lang.String, boolean, long)
      */
     void requestServiceInfo(String type, String name, boolean persistent, long timeout);
 
@@ -296,7 +296,7 @@ public interface JmmDNS extends Closeable {
      * @param listener
      *            listener for service types
      * @exception IOException if any IO error occurs
-     * @see JmDNS#addServiceTypeListener(ServiceTypeListener)
+     * @see javax.jmdns.JmDNS#addServiceTypeListener(javax.jmdns.ServiceTypeListener)
      */
     void addServiceTypeListener(ServiceTypeListener listener) throws IOException;
 
@@ -305,7 +305,7 @@ public interface JmmDNS extends Closeable {
      *
      * @param listener
      *            listener for service types
-     * @see JmDNS#removeServiceTypeListener(ServiceTypeListener)
+     * @see javax.jmdns.JmDNS#removeServiceTypeListener(javax.jmdns.ServiceTypeListener)
      */
     void removeServiceTypeListener(ServiceTypeListener listener);
 
@@ -316,7 +316,7 @@ public interface JmmDNS extends Closeable {
      *            full qualified service type, such as <code>_http._tcp.local.</code>.
      * @param listener
      *            listener for service updates
-     * @see JmDNS#addServiceListener(String, ServiceListener)
+     * @see javax.jmdns.JmDNS#addServiceListener(java.lang.String, javax.jmdns.ServiceListener)
      */
     void addServiceListener(String type, ServiceListener listener);
 
@@ -327,7 +327,7 @@ public interface JmmDNS extends Closeable {
      *            full qualified service type, such as <code>_http._tcp.local.</code>.
      * @param listener
      *            listener for service updates
-     * @see JmDNS#removeServiceListener(String, ServiceListener)
+     * @see javax.jmdns.JmDNS#removeServiceListener(java.lang.String, javax.jmdns.ServiceListener)
      */
     void removeServiceListener(String type, ServiceListener listener);
 
@@ -338,7 +338,7 @@ public interface JmmDNS extends Closeable {
      * @param info
      *            service info to register
      * @exception IOException if any IO error occurs
-     * @see JmDNS#registerService(ServiceInfo)
+     * @see javax.jmdns.JmDNS#registerService(javax.jmdns.ServiceInfo)
      */
     void registerService(ServiceInfo info) throws IOException;
 
@@ -347,14 +347,14 @@ public interface JmmDNS extends Closeable {
      *
      * @param info
      *            service info to remove
-     * @see JmDNS#unregisterService(ServiceInfo)
+     * @see javax.jmdns.JmDNS#unregisterService(javax.jmdns.ServiceInfo)
      */
     void unregisterService(ServiceInfo info);
 
     /**
      * Unregister all services.
      *
-     * @see JmDNS#unregisterAllServices()
+     * @see javax.jmdns.JmDNS#unregisterAllServices()
      */
     void unregisterAllServices();
 
@@ -363,7 +363,7 @@ public interface JmmDNS extends Closeable {
      *
      * @param type
      *            full qualified service type, such as <code>_http._tcp.local.</code>.
-     * @see JmDNS#registerServiceType(String)
+     * @see javax.jmdns.JmDNS#registerServiceType(java.lang.String)
      */
     void registerServiceType(String type);
 
@@ -373,7 +373,7 @@ public interface JmmDNS extends Closeable {
      * @param type
      *            Service type name, such as <code>_http._tcp.local.</code>.
      * @return An array of service instance.
-     * @see JmDNS#list(String)
+     * @see javax.jmdns.JmDNS#list(java.lang.String)
      */
     ServiceInfo[] list(String type);
 
@@ -385,7 +385,7 @@ public interface JmmDNS extends Closeable {
      * @param timeout
      *            timeout in milliseconds. Typical timeout should be 6s.
      * @return An array of service instance.
-     * @see JmDNS#list(String, long)
+     * @see javax.jmdns.JmDNS#list(java.lang.String, long)
      */
     ServiceInfo[] list(String type, long timeout);
 
@@ -395,7 +395,7 @@ public interface JmmDNS extends Closeable {
      * @param type
      *            Service type name, such as <code>_http._tcp.local.</code>.
      * @return A dictionary of service info by subtypes.
-     * @see JmDNS#listBySubtype(String)
+     * @see javax.jmdns.JmDNS#listBySubtype(java.lang.String)
      */
     Map<String, ServiceInfo[]> listBySubtype(String type);
 
@@ -407,7 +407,7 @@ public interface JmmDNS extends Closeable {
      * @param timeout
      *            timeout in milliseconds. Typical timeout should be 6s.
      * @return A dictionary of service info by subtypes.
-     * @see JmDNS#listBySubtype(String, long)
+     * @see javax.jmdns.JmDNS#listBySubtype(java.lang.String, long)
      */
     Map<String, ServiceInfo[]> listBySubtype(String type, long timeout);
 

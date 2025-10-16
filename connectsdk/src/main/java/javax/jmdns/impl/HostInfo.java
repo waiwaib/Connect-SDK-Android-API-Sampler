@@ -49,7 +49,7 @@ public class HostInfo implements DNSStatefulObject {
 
     private final static int    _labelLengthLimit = 0x3F;
 
-    private final static class HostInfoState extends DefaultImplementation {
+    private final static class HostInfoState extends DNSStatefulObject.DefaultImplementation {
 
         private static final long serialVersionUID = -8191476803620402088L;
 
