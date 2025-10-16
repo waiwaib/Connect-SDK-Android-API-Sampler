@@ -94,7 +94,7 @@ public class CastDiscoveryProvider implements DiscoveryProvider {
                 return;
             }
         }
-        rescan();
+        scan();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CastDiscoveryProvider implements DiscoveryProvider {
     }
 
     @Override
-    public void rescan() {
+    public void scan() {
         Util.runOnUI(() -> mMediaRouter.addCallback(mMediaRouteSelector, mMediaRouterCallback,
                 MediaRouter.CALLBACK_FLAG_REQUEST_DISCOVERY));
     }

@@ -114,7 +114,7 @@ public class FireTVDiscoveryProvider implements DiscoveryProvider {
      * Invokes restart method since FlingSDK doesn't have analog of rescan
      */
     @Override
-    public void rescan() {
+    public void scan() {
         // discovery controller doesn't have rescan capability
         restart();
     }

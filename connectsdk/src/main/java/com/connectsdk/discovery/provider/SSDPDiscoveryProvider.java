@@ -40,8 +40,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -61,14 +59,13 @@ public class SSDPDiscoveryProvider implements DiscoveryProvider {
 
     private SSDPClient ssdpClient;
 
-    private Timer scanTimer;
-
     private final Pattern uuidReg;
 
     private Thread responseThread;
     private Thread notifyThread;
 
     boolean isRunning = false;
+    private  boolean isScanning = false;
 
     private final Object lock = new Object();
 
@@ -120,33 +117,37 @@ public class SSDPDiscoveryProvider implements DiscoveryProvider {
     }
 
     public void sendSearch() {
-        List<String> killKeys = new ArrayList<>();
+        if (isScanning) return;
 
-        long killPoint = new Date().getTime() - TIMEOUT;
+//        List<String> killKeys = new ArrayList<>();
+//
+//        long killPoint = new Date().getTime() - TIMEOUT;
+//
+//        for (String key : foundServices.keySet()) {
+//            ServiceDescription service = foundServices.get(key);
+//            if (service == null || service.getLastDetection() < killPoint) {
+//                killKeys.add(key);
+//            }
+//        }
+//
+//        for (String key : killKeys) {
+//            final ServiceDescription service = foundServices.get(key);
+//
+//            if (service != null) {
+//                notifyListenersOfLostService(service);
+//            }
+//
+//            foundServices.remove(key);
+//        }
 
-        for (String key : foundServices.keySet()) {
-            ServiceDescription service = foundServices.get(key);
-            if (service == null || service.getLastDetection() < killPoint) {
-                killKeys.add(key);
-            }
-        }
-
-        for (String key : killKeys) {
-            final ServiceDescription service = foundServices.get(key);
-
-            if (service != null) {
-                notifyListenersOfLostService(service);
-            }
-
-            foundServices.remove(key);
-        }
-
-
+        isScanning = true;
         new Thread(() -> {
             try {
-                rescan();
+                scan();
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                isScanning = false;
             }
         }).start();
     }
@@ -155,11 +156,6 @@ public class SSDPDiscoveryProvider implements DiscoveryProvider {
     public void stop() {
         synchronized (lock) {
             isRunning = false;
-
-            if (scanTimer != null) {
-                scanTimer.cancel();
-                scanTimer = null;
-            }
 
             if (responseThread != null) {
                 responseThread.interrupt();
@@ -192,7 +188,7 @@ public class SSDPDiscoveryProvider implements DiscoveryProvider {
     }
 
     @Override
-    public void rescan() {
+    public void scan() {
         for (DiscoveryFilter searchTarget : serviceFilters) {
             final String message = SSDPClient.getSSDPSearchMessage(searchTarget.getServiceFilter());
             try {

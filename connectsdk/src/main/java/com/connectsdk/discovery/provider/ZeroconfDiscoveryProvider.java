@@ -23,11 +23,8 @@ package com.connectsdk.discovery.provider;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -51,7 +48,6 @@ public class ZeroconfDiscoveryProvider implements DiscoveryProvider {
     JmDNS jmdns;
     InetAddress srcAddress;
 
-    private Timer scanTimer;
 
     List<DiscoveryFilter> serviceFilters;
 
@@ -59,6 +55,7 @@ public class ZeroconfDiscoveryProvider implements DiscoveryProvider {
     CopyOnWriteArrayList<DiscoveryProviderListener> serviceListeners;
 
     boolean isRunning = false;
+    private  boolean isScanning = false;
 
     ServiceListener jmdnsListener = new ServiceListener() {
 
@@ -158,10 +155,21 @@ public class ZeroconfDiscoveryProvider implements DiscoveryProvider {
         if (isRunning)
             return;
 
-        isRunning = true;
+        if (isScanning)
+            return;
 
-        scanTimer = new Timer();
-        scanTimer.schedule(new MDNSSearchTask(), 100, RESCAN_INTERVAL);
+        isRunning = true;
+        isScanning = true;
+
+        new Thread(() -> {
+            try {
+                scan();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                isScanning = false;
+            }
+        }).start();
     }
 
     protected JmDNS createJmDNS() throws IOException {
@@ -171,47 +179,10 @@ public class ZeroconfDiscoveryProvider implements DiscoveryProvider {
             return null;
     }
 
-    private class MDNSSearchTask extends TimerTask {
-
-        @Override
-        public void run() {
-            List<String> killKeys = new ArrayList<>();
-
-            long killPoint = new Date().getTime() - TIMEOUT;
-
-            for (String key : foundServices.keySet()) {
-                ServiceDescription service = foundServices.get(key);
-                if (service == null || service.getLastDetection() < killPoint) {
-                    killKeys.add(key);
-                }
-            }
-
-            for (String key : killKeys) {
-                final ServiceDescription service = foundServices.get(key);
-
-                if (service != null) {
-                    Util.runOnUI(() -> {
-                        for (DiscoveryProviderListener listener : serviceListeners) {
-                            listener.onServiceRemoved(ZeroconfDiscoveryProvider.this, service);
-                        }
-                    });
-                }
-
-                foundServices.remove(key);
-            }
-
-            rescan();
-        }
-    }
 
     @Override
     public void stop() {
         isRunning = false;
-
-        if (scanTimer != null) {
-            scanTimer.cancel();
-            scanTimer = null;
-        }
 
         if (jmdns != null) {
             for (DiscoveryFilter searchTarget : serviceFilters) {
@@ -238,7 +209,7 @@ public class ZeroconfDiscoveryProvider implements DiscoveryProvider {
     }
 
     @Override
-    public void rescan() {
+    public void scan() {
         try {
             if (jmdns != null) {
                 jmdns.close();

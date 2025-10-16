@@ -38,13 +38,19 @@ import com.connectsdk.discovery.DiscoveryManager;
 import com.connectsdk.discovery.DiscoveryManager.PairingLevel;
 import com.connectsdk.discovery.DiscoveryManagerListener;
 import com.connectsdk.discovery.DiscoveryProvider;
+import com.connectsdk.discovery.provider.SSDPDiscoveryProvider;
+import com.connectsdk.discovery.provider.ZeroconfDiscoveryProvider;
 import com.connectsdk.sampler.fragments.BaseFragment;
+import com.connectsdk.service.AndroidTVService;
+import com.connectsdk.service.DLNAService;
 import com.connectsdk.service.DeviceService;
 import com.connectsdk.service.DeviceService.PairingType;
+import com.connectsdk.service.GoogleCastService;
 import com.connectsdk.service.capability.MediaPlayer;
 import com.connectsdk.service.command.ServiceCommandError;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener, DiscoveryManagerListener {
@@ -124,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
 
         }
     };
-	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,27 +176,11 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
 
         // To search devices with specific service types
 
-        try {
-            // AirPlay
-//            mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.AirPlayService"),
-//                    (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.ZeroconfDiscoveryProvider"));
-            // webOS SSAP (Simple Service Access Protocol)
-//            mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.WebOSTVService"),
-//                    (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.SSDPDiscoveryProvider"));
-            // DLNA
-            mDiscoveryManager.registerDeviceService((Class<DeviceService>) Class.forName("com.connectsdk.service.DLNAService"),
-                    (Class<DiscoveryProvider>)Class.forName("com.connectsdk.discovery.provider.SSDPDiscoveryProvider"));
+        //mDiscoveryManager.registerDeviceService(AndroidTVService.class, ZeroconfDiscoveryProvider.class);
+        mDiscoveryManager.registerDeviceService(GoogleCastService.class, ZeroconfDiscoveryProvider.class);
+        mDiscoveryManager.registerDeviceService(DLNAService.class, SSDPDiscoveryProvider.class);
 
-            // Google Cast
-            mDiscoveryManager.registerDeviceService(
-                    (Class<DeviceService>) Class.forName("com.connectsdk.service.CastService"),
-                    (Class<DiscoveryProvider>) Class.forName("com.connectsdk.discovery.provider.CastDiscoveryProvider")
-            );
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
+        Log.d("MainActivity", "Discovery start");
         DiscoveryManager.getInstance().start();
     }
 

@@ -63,7 +63,7 @@ import java.util.List;
     /**
      * Sends out discovery query without a full restart
      */
-     void rescan();
+     void scan();
 
     /**
      * Resets the DiscoveryProvider.
