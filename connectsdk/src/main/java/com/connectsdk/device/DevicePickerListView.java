@@ -66,16 +66,6 @@ public class DevicePickerListView extends ListView implements DiscoveryManagerLi
                         dName = d.getModelName();
                     }
 
-                    if (d.getIpAddress().equals(device.getIpAddress())) {
-                        if (d.getFriendlyName().equals(device.getFriendlyName())) {
-                            if (!manager.isServiceIntegrationEnabled() &&
-                                    d.getServiceId().equals(device.getServiceId())) {
-                                pickerAdapter.remove(d);
-                                pickerAdapter.insert(device, i);
-                                return;
-                            }
-                        }
-                    }
 
                     if (newDeviceName.compareToIgnoreCase(dName) < 0) {
                         index = i;

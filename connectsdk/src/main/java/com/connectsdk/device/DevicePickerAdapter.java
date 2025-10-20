@@ -74,17 +74,12 @@ public class DevicePickerAdapter extends ArrayAdapter<ConnectableDevice> {
 
             textView.setTextColor(Color.WHITE);
 
-            boolean isDebuggable =  (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
-            boolean hasNoFilters = DiscoveryManager.getInstance().getCapabilityFilters().isEmpty();
-
             String serviceNames = device.getConnectedServiceNames();
             boolean hasServiceNames = (serviceNames != null && !serviceNames.isEmpty());
 
-            boolean shouldShowServiceNames = hasServiceNames && (isDebuggable || hasNoFilters);
-
             TextView subTextView = view.findViewById(subTextViewResourceId);
 
-            if (shouldShowServiceNames) {
+            if (hasServiceNames) {
                 subTextView.setText(serviceNames);
                 subTextView.setTextColor(Color.WHITE);
             } else {

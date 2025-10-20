@@ -41,9 +41,6 @@ import java.util.List;
  * See CastDiscoveryProvider and SSDPDiscoveryProvider for implementations.
  */
  public interface DiscoveryProvider {
-     int RESCAN_INTERVAL = 10000;
-     int RESCAN_ATTEMPTS = 6;
-     int TIMEOUT = RESCAN_INTERVAL * RESCAN_ATTEMPTS;
 
     /**
      * Starts the DiscoveryProvider.

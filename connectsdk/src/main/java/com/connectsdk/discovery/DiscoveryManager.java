@@ -126,7 +126,7 @@ public class DiscoveryManager implements ConnectableDeviceListener,
         ON
     }
 
-    public static String CONNECT_SDK_VERSION = "1.6.0";
+    public static String CONNECT_SDK_VERSION = "2.0.0";
 
     private static DiscoveryManager instance;
 
@@ -140,7 +140,6 @@ public class DiscoveryManager implements ConnectableDeviceListener,
     CopyOnWriteArrayList<DiscoveryProvider> discoveryProviders;
 
     private final CopyOnWriteArrayList<DiscoveryManagerListener> discoveryListeners;
-    List<CapabilityFilter> capabilityFilters;
 
     MulticastLock multicastLock;
     BroadcastReceiver receiver;
@@ -151,34 +150,17 @@ public class DiscoveryManager implements ConnectableDeviceListener,
     private boolean mSearching = false;
 
     /**
-     * If serviceIntegrationEnabled is false (default), all services look like in different devices.
-     * If serviceIntegrationEnabled is true, services in a device are managed by one device instance.
-     */
-    private boolean serviceIntegrationEnabled = false;
-
-    public void setServiceIntegration(boolean value) {
-        serviceIntegrationEnabled = value;
-    }
-
-    public boolean isServiceIntegrationEnabled() {
-        return serviceIntegrationEnabled;
-    }
-
-    /**
      * Use device name and IP for identification of device,
      * because some devices have multiple device instances with same IP.
      * (i.e., a device including docker containers with host network setting.)
      * And if service integration is false (default), all services look like different devices.
      */
     private String getDeviceKey(ConnectableDevice device) {
-        if (isServiceIntegrationEnabled()) return device.getFriendlyName() + device.getIpAddress();
-        return device.getFriendlyName() + device.getIpAddress() + device.getServiceId();
+        return device.getFriendlyName() + device.getIpAddress();
     }
 
     private String getDeviceKey(ServiceDescription srvDesc) {
-        if (isServiceIntegrationEnabled())
-            return srvDesc.getIpAddress();
-        return srvDesc.getFriendlyName() + srvDesc.getIpAddress() + srvDesc.getServiceID();
+        return srvDesc.getIpAddress();
     }
 
     /**
@@ -251,7 +233,6 @@ public class DiscoveryManager implements ConnectableDeviceListener,
         multicastLock = wifiMgr.createMulticastLock(Util.T);
         multicastLock.setReferenceCounted(true);
 
-        capabilityFilters = new ArrayList<>();
         pairingLevel = PairingLevel.OFF;
 
         receiver = new BroadcastReceiver() {
@@ -347,51 +328,6 @@ public class DiscoveryManager implements ConnectableDeviceListener,
      */
     public void removeListener(DiscoveryManagerListener listener) {
         discoveryListeners.remove(listener);
-    }
-
-    public void setCapabilityFilters(CapabilityFilter... capabilityFilters) {
-        setCapabilityFilters(Arrays.asList(capabilityFilters));
-    }
-
-    public void setCapabilityFilters(List<CapabilityFilter> capabilityFilters) {
-        this.capabilityFilters = capabilityFilters;
-
-        for (ConnectableDevice device : compatibleDevices.values()) {
-            handleDeviceLoss(device);
-        }
-
-        compatibleDevices.clear();
-
-        for (ConnectableDevice device : allDevices.values()) {
-            if (deviceIsCompatible(device)) {
-                compatibleDevices.put(getDeviceKey(device), device);
-
-                handleDeviceAdd(device);
-            }
-        }
-    }
-
-    /**
-     * Returns the list of capability filters.
-     */
-    public List<CapabilityFilter> getCapabilityFilters() {
-        return capabilityFilters;
-    }
-
-    public boolean deviceIsCompatible(ConnectableDevice device) {
-        if (capabilityFilters == null || capabilityFilters.isEmpty()) {
-            return true;
-        }
-
-        boolean isCompatible = false;
-
-        for (CapabilityFilter filter : this.capabilityFilters) {
-            if (device.hasCapabilities(filter.capabilities)) {
-                isCompatible = true;
-                break;
-            }
-        }
-        return isCompatible;
     }
 
     /**
@@ -632,8 +568,6 @@ public class DiscoveryManager implements ConnectableDeviceListener,
     }
 
     public void handleDeviceAdd(ConnectableDevice device) {
-        if (!deviceIsCompatible(device))
-            return;
 
         compatibleDevices.put(getDeviceKey(device), device);
 
@@ -645,18 +579,14 @@ public class DiscoveryManager implements ConnectableDeviceListener,
     public void handleDeviceUpdate(ConnectableDevice device) {
         String devKey = getDeviceKey(device);
 
-        if (deviceIsCompatible(device)) {
-            if (device.getIpAddress() != null && compatibleDevices.containsKey(devKey)) {
-                for (DiscoveryManagerListener listener : discoveryListeners) {
-                    listener.onDeviceUpdated(this, device);
-                }
-            } else {
-                handleDeviceAdd(device);
+        if (device.getIpAddress() != null && compatibleDevices.containsKey(devKey)) {
+            for (DiscoveryManagerListener listener : discoveryListeners) {
+                listener.onDeviceUpdated(this, device);
             }
         } else {
-            compatibleDevices.remove(devKey);
-            handleDeviceLoss(device);
+            handleDeviceAdd(device);
         }
+
     }
 
     public void handleDeviceLoss(ConnectableDevice device) {
